@@ -38,5 +38,13 @@ public class Main {
 //		ParsePlot pp = new ParsePlot();
 //		pp.getFields("lists\\plot.list", "lists\\plot.txt");
 //		System.out.println("Job done");
+		
+		ParseBio pb = new ParseBio();
+		try {
+			pb.populateList();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Error " + e.getMessage());
+		}
 	}
 }

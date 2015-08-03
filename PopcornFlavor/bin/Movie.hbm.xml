@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name="Entities.Movie" table="movie">
+      <meta attribute="class-description">
+         This class contains the employee detail. 
+      </meta>
+      <id name="idMovie" type="int" column="idMovie">
+         <generator class="native"/>
+      </id>
+      <property name="title" column="title" type="string"/>
+      <property name="type" column="type" type="string"/>
+      <property name="beginYear" column="beginYear" type="string"/>
+      <property name="finishYear" column="endYear" type="string"/>
+      <property name="plot" column="plot" type="string"/>
+      <property name="totalVoters" column="totalVoters" type="int"/>
+      <property name="totalRating" column="totalRating" type="int"/>
+      <property name="img" column="img" type="string"/>
+   </class>
+</hibernate-mapping>
