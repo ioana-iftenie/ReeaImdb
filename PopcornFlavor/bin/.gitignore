@@ -1,0 +1,10 @@
+/Database/
+/Encoding/
+/Main/
+/Parse/
+/Entities/
+/Genre.hbm.xml
+/Movie.hbm.xml
+/Properties/
+/Validation/
+/hibernate.cfg.xml
