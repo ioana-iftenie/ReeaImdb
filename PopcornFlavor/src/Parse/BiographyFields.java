@@ -44,7 +44,7 @@ public class BiographyFields {
 				String content = null;
 				String field1 = null;
 				while (field1 != null) {
-				if("".equals(line) || line.contains("------------")) line = br.readLine();
+				if ("".equals(line) || line.contains("------------")) line = br.readLine();
 				int	fieldNameSep1 = line.indexOf(':');
 				if (fieldNameSep1 > 0)
 					field1 = line.substring(0, fieldNameSep1);

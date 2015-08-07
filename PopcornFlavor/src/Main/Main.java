@@ -1,9 +1,12 @@
 package Main;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import Parse.*;
-import Properties.ConfigFile;
+import Entities.MovieGenre;
+import Parse.ParseGenres;
+
 
 public class Main {
 	public static void main(String argss[]) {
@@ -35,16 +38,25 @@ public class Main {
 //			e.printStackTrace();
 //		}
 //		System.out.println("Parsing plot");
-//		ParsePlot pp = new ParsePlot();
+//		PlotFields pp = new PlotFields();
 //		pp.getFields("lists\\plot.list", "lists\\plot.txt");
 //		System.out.println("Job done");
 		
-		ParseBio pb = new ParseBio();
-		try {
-			pb.populateList();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Error " + e.getMessage());
-		}
+//		ParsePlot pb = new ParsePlot();
+//		try {
+//			pb.populateList();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			System.out.println("Error " + e.getMessage());
+//		}
+//		
+//		ParseGenres pg = new ParseGenres();
+//		try {
+//			pg.parseGenres();
+//			
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 }

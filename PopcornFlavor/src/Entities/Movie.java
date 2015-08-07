@@ -22,6 +22,9 @@ public class Movie {
 		img = null;
 	}
 
+	public Movie() {
+		
+	}
 	
 	public int getIdMovie() {
 		return idMovie;
@@ -117,9 +120,7 @@ public class Movie {
 	public int hashCode() {
 		int result = 1;
 		result = result * 37 + title.hashCode();
-//		result = 37 * result + type.hashCode();
 		result = 37 * result + beginYear.hashCode();
-//		result = 37 * result + finishYear.hashCode();
 		return result;
 	}
 
@@ -131,29 +132,11 @@ public class Movie {
 		if ((title == null) && (aMovie.title != null)) return false;
 		if ((aMovie.title == null) && (title != null)) return false;
 		if ((title != null) && !title.equals(aMovie.title)) return false;
-//		
-//		if ((type == null) && (aMovie.type != null)) return false;
-//		if ((aMovie.type == null) && (type != null)) return false;
-//		if ((type != null) && !type.equals(type)) return false;
-		
 		if ((beginYear == null) && (aMovie.beginYear != null)) return false;
 		if ((aMovie.beginYear == null) && (beginYear != null)) return false;
 		if ((beginYear != null) && !beginYear.equals(aMovie.beginYear)) return false;
-//		
-//		if ((finishYear == null) && (aMovie.finishYear != null)) return false;
-//		if ((aMovie.finishYear == null) && (finishYear != null)) return false;
-//		if ((finishYear != null) && !finishYear.equals(aMovie.finishYear)) return false;
-		
-			
 		return (o instanceof Movie 
 				&& (this.getTitle().equals(((Movie) o).getTitle())
-//				&& this.getType().equals(((Movie) o).getType())
-				&& this.getBeginYear().equals(((Movie) o).getBeginYear())
-//				&& this.getFinishYear().equals(((Movie) o).getFinishYear())
-				)
-				);
+				&& this.getBeginYear().equals(((Movie) o).getBeginYear())));
 	}
-
-
-
 }

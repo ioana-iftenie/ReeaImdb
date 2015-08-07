@@ -23,5 +23,6 @@
   
    <mapping resource="Movie.hbm.xml"/>
    <mapping resource="Genre.hbm.xml"/>
+   <mapping resource="MovieGenreTable.hbm.xml"/>
 </session-factory>
 </hibernate-configuration>
