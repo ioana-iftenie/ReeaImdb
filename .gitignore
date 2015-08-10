@@ -1,2 +1,6 @@
 PopcornFlavor/lists/*
 /lists/*
+PopcornFlavor/.classpath
+.classpath
+PopcornFlavor/libs/*
+/libs/*
