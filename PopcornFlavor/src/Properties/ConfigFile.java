@@ -54,12 +54,16 @@ public class ConfigFile {
 		configActor.setProperty("Project", "PopcornFlavor");
 		configActor.setProperty("Encoding", "windows-1252");
 		configActor.setProperty("1-Attribute&Type", new String[] {
-				"actor name", "String" });
-		configActor.setProperty("2-Attribute&Type", new String[] {
+				"first name", "String" });
+		configActor.setProperty("2-Attribute&Type", new String[] { "last name",
+				"String" });
+		configActor.setProperty("3-Attribute&Type", new String[] {
 				"movie name", "String" });
-		configActor.setProperty("3-Attribute&Type", new String[] { "role name",
+		configActor.setProperty("4-Attribute&Type", new String[] { "role name",
 				"String" });
 		configActor.setProperty("Separator-between-actors", "new line");
+		configActor.setProperty("Separator-between-first-name-and-last-name",
+				",");
 	}
 
 	public void writeToPropertiesFileBiographies() {
@@ -71,9 +75,9 @@ public class ConfigFile {
 				"movie genre", "String" });
 		configGenres.setProperty("Separator-between-movie", "new line");
 	}
-	
+
 	public void writeToPropertiesFileGenres() {
-		
+
 	}
 
 	public void addPropMovie(String key, double value) {
@@ -87,7 +91,7 @@ public class ConfigFile {
 		properties.setProperty(key, value);
 		configActor.append(properties);
 	}
-	
+
 	public void addPropGenres(String key, double value) {
 		Configuration properties = new PropertiesConfiguration();
 		properties.setProperty(key, value);
@@ -117,7 +121,7 @@ public class ConfigFile {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void saveFileGenres() {
 		try {
 			configGenres.save(PROPERTIES_GENRES);

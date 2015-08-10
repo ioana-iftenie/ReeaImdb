@@ -22,6 +22,7 @@ public class BiographyFields {
 	public static Multiset<String> m = HashMultiset.create();
 	Frequency f = new Frequency();
 	Frequency fc = new Frequency();
+	
 	public void getFields(String inputFile, String outputFile)
 			throws IOException {
 
@@ -43,23 +44,34 @@ public class BiographyFields {
 				String field = null;
 				String content = null;
 				String field1 = null;
+				
 				while (field1 != null) {
-				if ("".equals(line) || line.contains("------------")) line = br.readLine();
+					
+				if("".equals(line) || line.contains("------------")) {
+					line = br.readLine();
+				}				
+				
 				int	fieldNameSep1 = line.indexOf(':');
-				if (fieldNameSep1 > 0)
+				
+				if (fieldNameSep1 > 0) {
 					field1 = line.substring(0, fieldNameSep1);
+				}
+					
 				if (field1.length() == 2) {
 					content = line.substring(fieldNameSep1 + 2, line.length()); 
 					fields.add(field);
 					m.add(field);
+					//System.out.println(field1 + " " + content );
 					bw.write(field1 + " " + content + "\n");
 				}
+				
 				line = br.readLine();
 			}
 				
 				for(;;) {
 					
 					if (line == null) break;
+					
 					if("".equals(line) || line.contains("------------")) line = br.readLine();
 					int	fieldNameSep = line.indexOf(':');
 					if (fieldNameSep > 0)
@@ -68,12 +80,16 @@ public class BiographyFields {
 						content = line.substring(fieldNameSep + 2, line.length()); 
 						if(field1.equals(field)) {
 							bw.write( content + "\n");
+						//	System.out.println( content );
+
 							fields.add(field);
 							f.addValue(field);
 							m.add(field);
 						}
 						else {
 							bw.write(field + ":	" + content + "\n");
+						//	System.out.println(field + ": " + content );
+
 							fields.add(field);
 							m.add(field);
 							f.addValue(field);
@@ -86,11 +102,11 @@ public class BiographyFields {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			for (String s : fields) {
-				System.out.println("Field code: " + s);
-				System.out.println("Frequency:  " + m.count(s) + " / " + m.size() + "("+( f.getPct(s) *100 )+ ")");
-				
-			}
+//			for (String s : fields) {
+//				System.out.println("Field code: " + s);
+//				System.out.println("Frequency:  " + m.count(s) + " / " + m.size() + "("+( f.getPct(s) *100 )+ ")");
+//				
+//			}
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

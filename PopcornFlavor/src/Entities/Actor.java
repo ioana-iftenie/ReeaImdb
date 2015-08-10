@@ -1,51 +1,116 @@
 package Entities;
 
-import java.util.Set;
+import Entities.Actor;
 
 public class Actor {
-	private String actor_id;
-	private String actor_name;
+	private int idActor;
+	private String firstName;
+	private String lastName;
 	private String nickname;
-	private String birthDay; // DB
-	private String deathDay; // DD
-	private String bio; // TR
-	private Set<Role> rolesList;
+	private String height;
+	private String biography;
+	private String dateBirth;
+	private String dateDeath;
+	private String img;
 
-	// HT height
-
-	public Actor(String actor_id, String actor_name, Set<Role> rolesList) {
-		this.actor_name = actor_name;
-		this.rolesList = rolesList;
+	public Actor(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
-	public String getActor_name() {
-		return actor_name;
+	public Actor() {
 	}
 
-	public void setActor_name(String actor_name) {
-		this.actor_name = actor_name;
+	public Actor(String firstName, String lastName, String nickname,
+			String height, String bio, String dateB, String dateD, String img) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.nickname = nickname;
+		this.height = height;
+		this.biography = bio;
+		this.dateBirth = dateB;
+		this.dateDeath = dateD;
+		this.img = img;
 	}
 
-	public Set<Role> getRolesList() {
-		return rolesList;
+	public int getIdActor() {
+		return idActor;
 	}
 
-	public void setRolesList(Set<Role> rolesList) {
-		this.rolesList = rolesList;
+	public void setIdActor(int idActor) {
+		this.idActor = idActor;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getHeight() {
+		return height;
+	}
+
+	public void setHeight(String height) {
+		this.height = height;
+	}
+
+	public String getBiography() {
+		return biography;
+	}
+
+	public void setBiography(String biography) {
+		this.biography = biography;
+	}
+
+	public String getDateBirth() {
+		return dateBirth;
+	}
+
+	public void setDateBirth(String dateBirth) {
+		this.dateBirth = dateBirth;
+	}
+
+	public String getDateDeath() {
+		return dateDeath;
+	}
+
+	public void setDateDeath(String dateDeath) {
+		this.dateDeath = dateDeath;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
 	}
 
 	@Override
 	public int hashCode() {
 		int result = 1;
-		result = result * 37 + actor_name.hashCode();
-		result = 37 * result + rolesList.hashCode();
+		result = result * 37 + firstName.hashCode();
+		result = 37 * result + lastName.hashCode();
 		return result;
-	}
-
-	public void makeActorId() {
-
-		this.actor_id = this.actor_name + "/" + this.birthDay;
-
 	}
 
 	@Override
@@ -54,22 +119,23 @@ public class Actor {
 			return false;
 		Actor anActor = (Actor) o;
 
-		if ((actor_name == null) && (anActor.actor_name != null))
+		if ((firstName == null) && (anActor.firstName != null))
 			return false;
-		if ((anActor.actor_name == null) && (actor_name != null))
+		if ((anActor.firstName == null) && (firstName != null))
 			return false;
-		if ((actor_name != null) && !actor_name.equals(anActor.actor_name))
-			return false;
-
-		if ((rolesList == null) && (anActor.rolesList != null))
-			return false;
-		if ((anActor.rolesList == null) && (rolesList != null))
-			return false;
-		if ((rolesList != null) && !rolesList.equals(anActor.rolesList))
+		if ((firstName != null) && !firstName.equals(anActor.firstName))
 			return false;
 
-		return (o instanceof Actor && (this.getActor_name().equals(
-				((Actor) o).getActor_name()) && this.getRolesList().equals(
-				((Actor) o).getRolesList())));
+		if ((lastName == null) && (anActor.lastName != null))
+			return false;
+		if ((anActor.lastName == null) && (lastName != null))
+			return false;
+		if ((lastName != null) && !lastName.equals(anActor.lastName))
+			return false;
+
+		return (o instanceof Actor && (this.getFirstName().equals(
+				((Actor) o).getFirstName()) && this.getLastName().equals(
+				((Actor) o).getLastName())));
 	}
+
 }

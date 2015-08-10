@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name="Entities.Actor" table="actor">
+      <meta attribute="class-description">
+         This class contains the employee detail. 
+      </meta>
+      <id name="idActor" type="int" column="idActor">
+         <generator class="native"/>
+      </id>
+      <property name="firstName" column="firstName" type="string"/>
+      <property name="lastName" column="lastName" type="string"/>
+      <property name="nickname" column="nickname" type="string"/>
+      <property name="height" column="height" type="string"/>
+      <property name="biography" column="biography" type="string"/>
+      <property name="dateBirth" column="dateBirth" type="string"/>
+      <property name="dateDeath" column="dateDeath" type="string"/>
+      <property name="img" column="img" type="string"/>
+   </class>
+</hibernate-mapping>

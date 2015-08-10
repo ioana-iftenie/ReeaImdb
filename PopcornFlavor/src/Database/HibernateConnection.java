@@ -1,28 +1,28 @@
 package Database;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import Entities.*;
-import Parse.*;
+import Entities.Actor;
+import Entities.Genre;
+import Entities.Movie;
+import Parse.ParseActors;
+import Parse.ParseGenres;
+import Parse.ParseMovies;
 
 public class HibernateConnection {
 
 	private static SessionFactory factory;
 	public static Set<String> set = new HashSet<String>();
-
 	public static Set<Movie> setMovies = new HashSet<Movie>();
-	public static List<Genre> listGenre = new ArrayList<Genre>();
-	public static List<MovieGenre> movieGenreList = new ArrayList<MovieGenre>();
-
-	public static List<Plot> plotList = new ArrayList<Plot>();
+	public static Set<Actor> setActors = new HashSet<Actor>();
 
 	public static void main(String args[]) {
 		Configuration cfg = new Configuration();
@@ -31,44 +31,36 @@ public class HibernateConnection {
 		Session s = factory.openSession();
 		Transaction tx = s.beginTransaction();
 
-		getGenre();
-		for (String st : set) {
-			addGenre(st);
-			System.out.println("Added " + st);
-		}
+//		Adding genres into database
+//		getGenre();
+//		System.out.println("Adding genres into database");
+//		for (String st : set) {
+//			addGenre(st);
+//		}
+//		System.out.println("Done adding genres into database");
 
-		System.out.println("Finished adding genres to database");
-
+//		Adding movies into database
 		getMovies();
-		System.out.println("Adding movies to database");
+		System.out.println("Adding movies into database");
 		for (Movie sm : setMovies) {
 			addMovie(sm.getTitle(), sm.getType(), sm.getBeginYear(),
 					sm.getFinishYear(), null, 0, 0, null);
 		}
-		System.out.println("Done");
-		System.out.println("Start");
-		System.out.println("Start getting plot");
-		getPlot();
-		System.out.println("done getting plot");
-		for (int i = 0; i < plotList.size(); i++) {
-			UpdatePlot(plotList.get(i).getPlot(), plotList.get(i).getTitle(),
-					plotList.get(i).getYear(), i);
-		}
+		System.out.println("Done adding movies into database");
 
-		ParseGenres pg = new ParseGenres();
-		try {
-			pg.parseGenres();
-			movieGenreList = pg.getMovieGenre();
-			for (int i = 1; i <= 32; i++) {
-				getGenreToList(i);
-			}
-			for (MovieGenre mg : movieGenreList) {
-				addMovieGenre(mg.getTitle(), mg.getYear(), mg.getGenre());
-			}
-			System.out.println("Done");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		Adding actors into database
+//		getActors();
+//		System.out.println("Adding actors into database");
+//		for (Actor a : setActors) {
+//			addActor(a.getFirstName(), a.getLastName(), null, null, null, null,
+//					null, null);
+//		}
+//		System.out.println("Done adding actors into database");
+		
+//		Update actors with nickname, height, biography, dateBirth, dateDeath
+		
+
+		s.close();
 	}
 
 	public static void getGenre() {
@@ -79,113 +71,35 @@ public class HibernateConnection {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
-	public static void getPlot() {
-		ParsePlot pp = new ParsePlot();
-		try {
-			pp.populateList();
-			plotList = pp.getPlot();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public static void getMovies() {
-		ParseMovies pm = new ParseMovies();
-		pm.ParseMovies();
-		setMovies = pm.getMovies();
-
-	}
-
-	public static Integer addMovieGenre(String titleMovie, String year,
-			String genreName) {
+	public static Integer addGenre(String name) {
 		Session session = factory.openSession();
 		Transaction tx = null;
-		Integer movieGenreTableID = null;
-		int idGenre = 0;
-		try {
-			Query query = session
-					.createQuery("Select idMovie from Movie where title = :Title and beginYear = :BeginYear");
-			query.setParameter("Title", titleMovie);
-			query.setParameter("BeginYear", year);
-			List m = query.list();
-			if (m.size() > 0) {
-				for (int i = 0; i < listGenre.size(); i++)
-					if (listGenre.get(i).getName().equals(genreName))
-						idGenre = listGenre.get(i).getIdGenre();
-				tx = session.beginTransaction();
-				MovieGenreTable mgt = new MovieGenreTable((int) m.get(0),
-						idGenre);
-				movieGenreTableID = (Integer) session.save(mgt);
-				tx.commit();
-			}
-		} catch (Exception e) {
-			System.out.println(titleMovie + "\t" + year + "\t" + genreName);
-			if (tx != null)
-				tx.rollback();
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
-		return movieGenreTableID;
-	}
-
-	public static Integer getMovieDetails(String title, String year) {
-		Session session = factory.openSession();
-
-		Query query = session
-				.createQuery("from Movie where title = :Title and beginYear = :BeginYear");
-		query.setParameter("Title", title);
-		query.setParameter("BeginYear", year);
-		Movie m = (Movie) query.list().get(0);
-		System.out.println(m.getTitle() + "\t" + m.getBeginYear() + "\t"
-				+ m.getPlot());
-
-		return 0;
-
-	}
-
-	public static Integer getGenreToList(int i) {
-		Session session = factory.openSession();
-
-		Query query = session.createQuery("from Genre where idGenre = :id");
-		query.setParameter("id", i);
-
-		Genre g = (Genre) query.list().get(0);
-		listGenre.add(new Genre(g.getIdGenre(), g.getName()));
-
-		return 0;
-
-	}
-
-	public static Integer UpdatePlot(String plot, String title, String year,
-			int i) {
-		Session session = factory.openSession();
-		Transaction tx = null;
-		Integer movieID = null;
+		Integer genreID = null;
 		try {
 			tx = session.beginTransaction();
-			Query query = session
-					.createQuery("update Movie set plot = :Plot where title = :Title and beginYear = :BeginYear");
-			query.setParameter("Plot", plot);
-			query.setParameter("Title", title);
-			query.setParameter("BeginYear", year);
-			int result = query.executeUpdate();
-			System.out.println(i + "\t Updated " + title);
+			Genre g = new Genre(name);
+			genreID = (Integer) session.save(g);
 			tx.commit();
-
 		} catch (HibernateException e) {
 			if (tx != null)
 				tx.rollback();
 			e.printStackTrace();
-			System.out.println("Error " + e.getMessage());
 		} finally {
 			session.close();
 		}
-		return movieID;
+		return genreID;
+	}
+
+	public static void getMovies() {
+		ParseMovies pm = new ParseMovies();
+		try {
+			pm.ParseMovies();
+			setMovies = pm.getMovies();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static Integer addMovie(String name, String type, String beginYear,
@@ -209,14 +123,27 @@ public class HibernateConnection {
 		return movieID;
 	}
 
-	public static Integer addGenre(String name) {
+	public static void getActors() {
+		ParseActors pa = new ParseActors();
+		try {
+			pa.parseActors();
+			setActors = pa.getActors();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static Integer addActor(String firstName, String lastName,
+			String nickname, String height, String bio, String db, String dd,
+			String img) {
 		Session session = factory.openSession();
 		Transaction tx = null;
-		Integer genreID = null;
+		Integer actorID = null;
 		try {
 			tx = session.beginTransaction();
-			Genre g = new Genre(name);
-			genreID = (Integer) session.save(g);
+			Actor a = new Actor(firstName, lastName, nickname, height, bio, db,
+					dd, img);
+			actorID = (Integer) session.save(a);
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null)
@@ -225,6 +152,7 @@ public class HibernateConnection {
 		} finally {
 			session.close();
 		}
-		return genreID;
+		return actorID;
 	}
+
 }

@@ -7,174 +7,218 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
+
+import Entities.Actor;
+import Entities.Movie;
 import Properties.ConfigFile;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.log4j.Logger;
+
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 
 public class ParseActors {
 
-	public void parseActors(String inputFile, String outputFile)
-			throws IOException {
+	public static Set<Actor> actors = new HashSet<Actor>();
+	static Logger log = Logger.getLogger(ParseActors.class.getName());
+
+	public void parseActors() throws IOException {
 
 		int count = 0;
 		BufferedReader br = null;
 		BufferedWriter bw = null;
-		DescriptiveStatistics actorStatistics = new DescriptiveStatistics();
-		DescriptiveStatistics roleStatistics = new DescriptiveStatistics();
-		DescriptiveStatistics movieStatistics = new DescriptiveStatistics();
+//		DescriptiveStatistics actorStat = new DescriptiveStatistics();
+//		DescriptiveStatistics firstNameStat = new DescriptiveStatistics();
+//		DescriptiveStatistics lastNameStat = new DescriptiveStatistics();
+//		DescriptiveStatistics roleStat = new DescriptiveStatistics();
+//		DescriptiveStatistics movieStat = new DescriptiveStatistics();
+		String actor = "";
+		String lastName = "";
+		String firstName = "";
+		String movie = "";
+		String role = "";
+		String newMovie = "";
+		String newRole = "";
 
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(
-					inputFile), "windows-1252"));
-			bw = new BufferedWriter(new FileWriter(outputFile));
+					"lists\\actors.list"), "windows-1252"));
+			bw = new BufferedWriter(new FileWriter("lists\\ACTORS.txt"));
 
 			try {
 
 				for (;;) {
 					String line = br.readLine();
+
 					if (line == null)
 						break;
 
 					if (count++ < 239)
 						continue;
 
+					if (count == 17790410)
+						break;
+
 					int actorNameSeparator = line.indexOf("\t");
 
 					if (actorNameSeparator > 0) {
-						String actorName = line
-								.substring(0, actorNameSeparator).trim();
-						actorStatistics.addValue(actorName.length());
+						actor = line.substring(0, actorNameSeparator).trim();
+//						actorStat.addValue(actor.length());
+						int sep = actor.indexOf(",");
+						if (sep > 0) {
+							lastName = actor.substring(0, sep);
+							firstName = actor
+									.substring(sep + 1, actor.length()).trim();
+//							lastNameStat.addValue(lastName.length());
+//							firstNameStat.addValue(firstName.length());
+							Actor A = new Actor(firstName, lastName);
+							actors.add(A);
+//							if (actors.add(A))
+//							System.out.println(A.getFirstName() + "\t" +
+//							A.getLastName());
+						}
 					}
 
-					int movieNameSeparator1 = line.indexOf("(1");
-					int movieNameSeparator2 = line.indexOf("(2");
-					int movieNameSeparator3 = line.indexOf("(?");
+					int movieSep1 = line.indexOf("(1");
+					int movieSep2 = line.indexOf("(2");
+					int movieSep3 = line.indexOf("(?");
 
-					if (movieNameSeparator1 > 0) {
-						String movieName = line.substring(
-								actorNameSeparator + 1, movieNameSeparator1)
-								.trim();
-						movieStatistics.addValue(movieName.length());
+					if (movieSep1 > 0) {
+						movie = line.substring(actorNameSeparator + 1,
+								movieSep1).trim();
+//						movieStat.addValue(movie.length());
 					} else {
-						if (movieNameSeparator2 > 0) {
-							String movieName = line
-									.substring(actorNameSeparator + 1,
-											movieNameSeparator2).trim();
-							movieStatistics.addValue(movieName.length());
+						if (movieSep2 > 0) {
+							movie = line.substring(actorNameSeparator + 1,
+									movieSep2).trim();
+//							movieStat.addValue(movie.length());
 						} else {
-							if (movieNameSeparator3 > 0) {
-								String movieName = line.substring(
-										actorNameSeparator + 1,
-										movieNameSeparator3).trim();
-								movieStatistics.addValue(movieName.length());
+							if (movieSep3 > 0) {
+								movie = line.substring(actorNameSeparator + 1,
+										movieSep3).trim();
+//								movieStat.addValue(movie.length());
 							}
 						}
 					}
 
-					int roleStartSeparator = line.indexOf('[');
-					int roleEndSeparator = line.indexOf(']');
+					int roleStartSep = line.indexOf('[');
+					int roleEndSep = line.indexOf(']');
 
-					if (roleStartSeparator > 0) {
-						String roleName = line.substring(
-								roleStartSeparator + 1, roleEndSeparator);
-						roleStatistics.addValue(roleName.length());
+					if (roleStartSep > 0) {
+						role = line.substring(roleStartSep + 1, roleEndSep);
+//						roleStat.addValue(role.length());
 					}
 
-					int actorSeparator = line.indexOf("\n");
-					int movieSeparator = line.indexOf("\t\t\t");
+					int actorSep = line.indexOf("\n");
+					int movieSep = line.indexOf("\t\t\t");
 
-					if (actorSeparator > 0) {
+					if (actorSep > 0) {
 
-						while (movieSeparator > 0) {
+						while (movieSep > 0) {
 
-							int newMovieNameSeparator1 = line.indexOf("(1");
-							int newMovieNameSeparator2 = line.indexOf("(2");
-							int newMovieNameSeparator3 = line.indexOf("(?");
+							int newMovieSep1 = line.indexOf("(1");
+							int newMovieSep2 = line.indexOf("(2");
+							int newMovieSep3 = line.indexOf("(?");
 
-							if (newMovieNameSeparator1 > 0) {
-								String newMovieName = line.substring(0,
-										newMovieNameSeparator1).trim();
-								movieStatistics.addValue(newMovieName.length());
+							if (newMovieSep1 > 0) {
+								newMovie = line.substring(0, newMovieSep1)
+										.trim();
+//								movieStat.addValue(newMovie.length());
 							} else {
-								if (newMovieNameSeparator2 > 0) {
-									String newMovieName = line.substring(0,
-											newMovieNameSeparator2).trim();
-									movieStatistics.addValue(newMovieName
-											.length());
+								if (newMovieSep2 > 0) {
+									newMovie = line.substring(0, newMovieSep2)
+											.trim();
+//									movieStat.addValue(newMovie.length());
 								} else {
-									if (newMovieNameSeparator3 > 0) {
-										String newMovieName = line.substring(0,
-												newMovieNameSeparator3).trim();
-										movieStatistics.addValue(newMovieName
-												.length());
+									if (newMovieSep3 > 0) {
+										newMovie = line.substring(0,
+												newMovieSep3).trim();
+//										movieStat.addValue(newMovie.length());
 									}
 								}
 							}
 
-							int newRoleStartSeparator = line.indexOf('[');
-							int newRoleEndSeparator = line.indexOf(']');
+							int newRoleStartSep = line.indexOf('[');
+							int newRoleEndSep = line.indexOf(']');
 
-							if (newRoleStartSeparator > 0) {
-								String newRoleName = line.substring(
-										newRoleStartSeparator + 1,
-										newRoleEndSeparator);
-								roleStatistics.addValue(newRoleName.length());
+							if (newRoleStartSep > 0) {
+								newRole = line.substring(newRoleStartSep + 1,
+										newRoleEndSep);
+//								roleStat.addValue(newRole.length());
 							}
 						}
 					}
 				}
+
+				System.out.println("1. actors size: " + actors.size());
 				
-				ConfigFile cf = new ConfigFile();
-				cf.writeToPropertiesFileActor();
-				cf.addPropActor("No-Of-Actors", actorStatistics.getN());
-				cf.addPropActor("Max-Length-Actor", actorStatistics.getMax());
-				cf.addPropActor("Min-Length-Actor", actorStatistics.getMin());
-				cf.addPropActor("Avg-Length-Actor", actorStatistics.getMean());
-				cf.addPropActor("No-Of-Movies", movieStatistics.getN());
-				cf.addPropActor("Max-Length-Actor", movieStatistics.getMax());
-				cf.addPropActor("Min-Length-Actor", movieStatistics.getMin());
-				cf.addPropActor("Avg-Length-Actor", movieStatistics.getMean());
-				cf.addPropActor("No-Of-Roles", roleStatistics.getN());
-				cf.addPropActor("Max-Length-Actor", roleStatistics.getMax());
-				cf.addPropActor("Min-Length-Actor", roleStatistics.getMin());
-				cf.addPropActor("Avg-Length-Actor", roleStatistics.getMean());
-				cf.saveFileActor();			
-
-				bw.write("File name: actors.list" + "\n");
-				bw.write("Fields:" + "\n\n");
-
-				bw.write("Field #1" + "\n");
-				bw.write("Field name: actor name" + "\n");
-				bw.write("Frequency: " + actorStatistics.getN() + " values"
-						+ "\n");
-				bw.write("Maximum length of the values: "
-						+ actorStatistics.getMax() + "\n");
-				bw.write("Minimum length of the values: "
-						+ actorStatistics.getMin() + "\n");
-				bw.write("Mean length of the values: "
-						+ actorStatistics.getMean() + "\n\n");
-
-				bw.write("Field #2" + "\n");
-				bw.write("Field name: movie name" + "\n");
-				bw.write("Frequency: " + movieStatistics.getN() + " values"
-						+ "\n");
-				bw.write("Maximum length of the values: "
-						+ movieStatistics.getMax() + "\n");
-				bw.write("Minimum length of the values: "
-						+ movieStatistics.getMin() + "\n");
-				bw.write("Mean length of the values: "
-						+ movieStatistics.getMean() + "\n\n");
-
-				bw.write("Field #3" + "\n");
-				bw.write("Field name: role name" + "\n");
-				bw.write("Frequency: " + roleStatistics.getN() + " values"
-						+ "\n");
-				bw.write("Maximum length of the values: "
-						+ roleStatistics.getMax() + "\n");
-				bw.write("Minimum length of the values: "
-						+ roleStatistics.getMin() + "\n");
-				bw.write("Mean length of the values: "
-						+ roleStatistics.getMean());
+//				ConfigFile cf = new ConfigFile();
+//				cf.writeToPropertiesFileActor();
+//
+//				cf.addPropActor("No-Of-Actors", actorStat.getN());
+//
+//				cf.addPropActor("Max-Length-FirstName", firstNameStat.getMax());
+//				cf.addPropActor("Min-Length-FirstName", firstNameStat.getMin());
+//				cf.addPropActor("Avg-Length-FirstName", firstNameStat.getMean());
+//
+//				cf.addPropActor("Max-Length-LastName", lastNameStat.getMax());
+//				cf.addPropActor("Min-Length-LastName", lastNameStat.getMin());
+//				cf.addPropActor("Avg-Length-LastName", lastNameStat.getMean());
+//
+//				cf.addPropActor("Max-Length-MovieName", movieStat.getMax());
+//				cf.addPropActor("Min-Length-MovieName", movieStat.getMin());
+//				cf.addPropActor("Avg-Length-MovieName", movieStat.getMean());
+//
+//				cf.addPropActor("Max-Length-RoleName", roleStat.getMax());
+//				cf.addPropActor("Min-Length-RoleName", roleStat.getMin());
+//				cf.addPropActor("Avg-Length-RoleName", roleStat.getMean());
+//				cf.saveFileActor();
+//
+//				bw.write("File name: actors.list" + "\n");
+//				bw.write("Fields:" + "\n\n");
+//
+//				bw.write("Field #1" + "\n");
+//				bw.write("Field name: first name" + "\n");
+//				bw.write("Frequency: " + firstNameStat.getN() + " values"
+//						+ "\n");
+//				bw.write("Maximum length of the values: "
+//						+ firstNameStat.getMax() + "\n");
+//				bw.write("Minimum length of the values: "
+//						+ firstNameStat.getMin() + "\n");
+//				bw.write("Mean length of the values: "
+//						+ firstNameStat.getMean() + "\n\n");
+//
+//				bw.write("Field #2" + "\n");
+//				bw.write("Field name: last name" + "\n");
+//				bw.write("Frequency: " + lastNameStat.getN() + " values" + "\n");
+//				bw.write("Maximum length of the values: "
+//						+ lastNameStat.getMax() + "\n");
+//				bw.write("Minimum length of the values: "
+//						+ lastNameStat.getMin() + "\n");
+//				bw.write("Mean length of the values: " + lastNameStat.getMean()
+//						+ "\n\n");
+//
+//				bw.write("Field #3" + "\n");
+//				bw.write("Field name: movie name" + "\n");
+//				bw.write("Frequency: " + movieStat.getN() + " values" + "\n");
+//				bw.write("Maximum length of the values: " + movieStat.getMax()
+//						+ "\n");
+//				bw.write("Minimum length of the values: " + movieStat.getMin()
+//						+ "\n");
+//				bw.write("Mean length of the values: " + movieStat.getMean()
+//						+ "\n\n");
+//
+//				bw.write("Field #4" + "\n");
+//				bw.write("Field name: role name" + "\n");
+//				bw.write("Frequency: " + roleStat.getN() + " values" + "\n");
+//				bw.write("Maximum length of the values: " + roleStat.getMax()
+//						+ "\n");
+//				bw.write("Minimum length of the values: " + roleStat.getMin()
+//						+ "\n");
+//				bw.write("Mean length of the values: " + roleStat.getMean());
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -199,5 +243,9 @@ public class ParseActors {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public Set getActors() {
+		return actors;
 	}
 }
